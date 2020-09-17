@@ -23,6 +23,28 @@ def download_txt(url, filename, folder='books/'):
         file.write(response.text)
     return filepath
 
+def download_image(url, folder='images/'):
+    """Функция для скачивания текстовых файлов.
+    Args:
+        url (str): Cсылка на текст, который хочется скачать.
+        filename (str): Имя файла, с которым сохранять.
+        folder (str): Папка, куда сохранять.
+    Returns:
+        str: Путь до файла, куда сохранён текст.
+    """
+    # TODO: Здесь ваша реализация
+    response = requests.get(url)
+    response.raise_for_status()
+    image = response.content
+    correct_filename = sanitize_filename(url.split("/")[-1])
+    correct_folder = sanitize_filename(folder)
+    filepath = os.path.join(correct_folder, correct_filename)
+    if not os.path.exists(correct_folder):
+        os.mkdir(correct_folder)
+    with open(filepath, 'wb') as file:
+        file.write(image)
+    return filepath
+
 """
 # Примеры использования
 url = 'http://tululu.org/txt.php?id=1'
