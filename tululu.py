@@ -13,9 +13,12 @@ def title_parser(url , id_book):
         title_name = title_name.replace(u'\xa0', u' ')
         title_name = title_name.strip(" ")
         img_src = soup.find('div', class_='bookimage').find('img')['src']
-        print(title_name)
+        comments = soup.find_all('div', class_="texts")
+        #print(title_name)
+        title_name = title_name.split("/")[-1]
+        #print(urljoin(url, img_src))
         img_src_1 = urljoin(url,img_src)
-        print(img_src_1)
+        #print(comments)
     except Exception as e:
         return None
-    return  img_src_1
+    return str(id_book) + ". " + title_name , img_src_1, comments

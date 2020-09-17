@@ -45,6 +45,21 @@ def download_image(url, folder='images/'):
         file.write(image)
     return filepath
 
+def save_text(filename, text_list ,folder='comments/'):
+    for comment in text_list:
+        com = comment.find("span", class_="black")
+        text = com.text
+        print(text)
+        correct_filename = sanitize_filename(filename.split("/")[-1])
+        correct_folder = sanitize_filename(folder)
+        filepath = os.path.join(correct_folder, correct_filename)
+        if not os.path.exists(correct_folder):
+            os.mkdir(correct_folder)
+        with open(filepath, 'a') as file:
+            file.write(text+"\n")
+    return filepath
+
+
 """
 # Примеры использования
 url = 'http://tululu.org/txt.php?id=1'
