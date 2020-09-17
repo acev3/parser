@@ -49,7 +49,6 @@ def save_text(filename, text_list ,folder='comments/'):
     for comment in text_list:
         com = comment.find("span", class_="black")
         text = com.text
-        print(text)
         correct_filename = sanitize_filename(filename.split("/")[-1])
         correct_folder = sanitize_filename(folder)
         filepath = os.path.join(correct_folder, correct_filename)

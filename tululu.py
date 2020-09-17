@@ -14,6 +14,11 @@ def title_parser(url , id_book):
         title_name = title_name.strip(" ")
         img_src = soup.find('div', class_='bookimage').find('img')['src']
         comments = soup.find_all('div', class_="texts")
+        genres = soup.find('span', class_='d_book').find_all('a')
+        genres_list = []
+        print(title_name)
+        for genre in genres:
+            genres_list.append(genre.text)
         #print(title_name)
         title_name = title_name.split("/")[-1]
         #print(urljoin(url, img_src))
@@ -21,4 +26,4 @@ def title_parser(url , id_book):
         #print(comments)
     except Exception as e:
         return None
-    return str(id_book) + ". " + title_name , img_src_1, comments
+    return str(id_book) + ". " + title_name , img_src_1, comments, genres_list

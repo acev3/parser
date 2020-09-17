@@ -10,12 +10,14 @@ if __name__ == '__main__':
             url = url_base % i
             response = requests.get(url)
             response.raise_for_status()
-            filename, img_src, comments = title_parser(url , i)
+            filename, img_src, comments, genres = title_parser(url , i)
             #if filename:
                 #download_txt(url, filename)
             #if img_src:
                 #download_image(img_src)
-            if comments:
-                save_text(filename, comments)
+            #if comments:
+                #save_text(filename, comments)
+            if genres:
+                print(genres)
         except Exception as e:
             print(e)
