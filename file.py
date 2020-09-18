@@ -2,7 +2,7 @@ import requests
 from pathvalidate import sanitize_filename
 import os
 
-def download_txt(url, filename, folder='books/'):
+def download_txt(url, filename, id_book, folder='books/'):
     """Функция для скачивания текстовых файлов.
     Args:
         url (str): Cсылка на текст, который хочется скачать.
@@ -12,6 +12,8 @@ def download_txt(url, filename, folder='books/'):
         str: Путь до файла, куда сохранён текст.
     """
     # TODO: Здесь ваша реализация
+
+    url = "http://tululu.org/txt.php?id=%s" % id_book
     response = requests.get(url)
     response.raise_for_status()
     correct_filename = sanitize_filename(filename + '.txt')
@@ -45,18 +47,21 @@ def download_image(url, folder='images/'):
         file.write(image)
     return filepath
 
-def save_text(filename, text_list ,folder='comments/'):
+def save_comments(filename, text_list ,folder='comments/'):
+    comments_list = []
     for comment in text_list:
         com = comment.find("span", class_="black")
         text = com.text
-        correct_filename = sanitize_filename(filename.split("/")[-1])
-        correct_folder = sanitize_filename(folder)
-        filepath = os.path.join(correct_folder, correct_filename)
-        if not os.path.exists(correct_folder):
-            os.mkdir(correct_folder)
-        with open(filepath, 'a') as file:
-            file.write(text+"\n")
-    return filepath
+        comments_list.append(text)
+        #correct_filename = sanitize_filename(filename.split("/")[-1])
+        #correct_folder = sanitize_filename(folder)
+        #filepath = os.path.join(correct_folder, correct_filename)
+        #if not os.path.exists(correct_folder):
+            #os.mkdir(correct_folder)
+        #with open(filepath, 'a') as file:
+            #file.write(text+"\n")
+    #return filepath
+    return comments_list
 
 
 """

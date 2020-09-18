@@ -1,5 +1,5 @@
 import requests
-from file import download_txt, download_image, save_text
+from file import download_txt, download_image, save_comments
 from tululu import title_parser
 
 
@@ -16,7 +16,7 @@ if __name__ == '__main__':
             #if img_src:
                 #download_image(img_src)
             #if comments:
-                #save_text(filename, comments)
+                #save_comments(filename, comments)
             if genres:
                 print(genres)
         except Exception as e:
