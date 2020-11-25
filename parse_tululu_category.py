@@ -49,7 +49,7 @@ def title_parser(url):
     return title_name , img_src_1, comments, genres_list, author , id_book
 
 
-def download_txt(url, filename, id_book, folder='books/'):
+def download_txt(filename, id_book, folder='books/'):
     """Функция для скачивания текстовых файлов.
     Args:
         url (str): Cсылка на текст, который хочется скачать.
@@ -96,18 +96,8 @@ def save_comments(filename, text_list ,folder='comments/'):
     for comment in text_list:
         selector = ".black"
         com = comment.select_one(selector)
-        #com = comment.find("span", class_="black")
         text = com.text
         comments_list.append(text)
-        #correct_filename = sanitize_filename(filename.split("/")[-1])
-        #correct_folder = sanitize_filename(folder)
-        #filepath = os.path.join(correct_folder, correct_filename)
-        #if not os.path.exists(correct_folder):
-            #os.mkdir(correct_folder)
-        #with open(filepath, 'a') as file:
-            #file.write(text+"\n")
-    #return filepath
-    #print(comments_list)
     return comments_list
 
 
@@ -115,19 +105,21 @@ def createParser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-sp', '--start_page', default=1, type=int)
     parser.add_argument('-ep', '--end_page', default=702 ,type=int)
+    parser.add_argument('-df', '--dest_folder', type=str, default="")
+    parser.add_argument('-si', '--skip_imgs', action='store_const', const=True)
+    parser.add_argument('-st', '--skip_txt', action='store_const', const=True)
+    parser.add_argument('-jp', '--json_path', type=str, default="books_info.json")
     return parser
 
-def fantasy_book(url):
+def get_book(url):
     response = requests.get(url, verify=False)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
-    #book_urls = soup.find_all('div', class_='bookimage')
     selector = ".bookimage a"
     book_urls = soup.select(selector)
     book_urls_list = []
     for book_url in book_urls:
         book_urls_list.append(urljoin(url, book_url['href']))
-        #print(urljoin(url, book_url.find('a')['href']))
     return  book_urls_list
 
 
@@ -138,9 +130,16 @@ def main():
     namespace = parser.parse_args(sys.argv[1:])
     start_page = namespace.start_page
     end_page = namespace.end_page
+    dest_folder = namespace.dest_folder
+    skip_imgs = namespace.skip_imgs
+    skip_txt = namespace.skip_txt
+    json_path = namespace.json_path
+    json_filename = os.path.join(dest_folder, json_path)
+    books_folder = os.path.join(dest_folder, "books")
+    image_folder = os.path.join(dest_folder, "images")
     for i in range(start_page, end_page):
         url = url_base % i
-        book_urls = fantasy_book(url)
+        book_urls = get_book(url)
         for book_url in book_urls:
             print(book_url)
             try:
@@ -149,26 +148,30 @@ def main():
                 response = requests.get(url, verify=False)
                 response.raise_for_status()
                 filename, img_src, comments, genres, author, id_book = title_parser(url)
-                if filename:
-                    book_info['title'] = filename
-                    book_path = download_txt(url, filename, id_book)
-                    book_info['book_path'] = book_path
-                if author:
-                    book_info['author'] = author
-                if img_src:
-                    image_src = download_image(img_src)
-                    book_info['img_src'] = image_src
+                if skip_txt:
+                    book_info['book_path'] = None
+                else:
+                    if filename:
+                        book_info['title'] = filename
+                        book_path = download_txt(filename, id_book, books_folder)
+                        book_info['book_path'] = book_path
+                    if author:
+                        book_info['author'] = author
+                if skip_imgs:
+                    book_info['image_src'] = None
+                else:
+                    if img_src:
+                        image_src = download_image(img_src, image_folder)
+                        book_info['img_src'] = image_src
                 if comments:
                     comments_list = save_comments(filename, comments)
                     book_info['comments'] = comments_list
                 if genres:
-                    # print(genres)
                     book_info['genres'] = genres
-                # print(book_info)
                 book_massive.append(book_info)
             except Exception as e:
                 print(e)
-    with open("books_info.json", "a", encoding='utf-8') as my_file:
+    with open(json_filename, "a", encoding='utf-8') as my_file:
         json.dump(book_massive, my_file, ensure_ascii=False)
 
 
