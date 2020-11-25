@@ -8,10 +8,10 @@
 5. Запустить парсер `python parse_tululu_category.py`
 ## Аргументы
 ***
-###--start_page
+### --start_page
 `python parse_tululu_category.py --start_page <n>`, n - номер страницы, с который начинается парсинг
 ***
-###--end_page
+### --end_page
 `python parse_tululu_category.py --end_page <n>`, n - номер страницы, до которой будет идти парсинг
 ## Цель проекта
 Код написан в образовательных целях на онлайн-курсе для веб-разработчиков dvmn.org.
