@@ -1,11 +1,11 @@
 # Проект парсер библиотеки tululu.org
 Парсер научной фантастики.
 ## Инструкция по установке.
- Скопируйте код в свою директорию
- Cоздать виртуальное окружение в директории с проектом: `python3 -m venv <your env>`
- Активировать виртульное окружение `source <your env>/bin/activate`
- Установить зависимости `pip install -r requirements.txt`
- Запустить парсер `python parse_tululu_category.py`
+ Скопируйте код в свою директорию.
+ Cоздать виртуальное окружение в директории с проектом: `python3 -m venv <your env>`.
+ Активировать виртульное окружение `source <your env>/bin/activate`.
+ Установить зависимости `pip install -r requirements.txt`.
+ Запустить парсер `python parse_tululu_category.py`.
 ## Аргументы
 ***
 ### --start_page
