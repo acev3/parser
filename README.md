@@ -6,22 +6,18 @@
  ```bash 
  python3 -m venv <your env>
  ```
-.
  Активировать виртульное окружение:
   ```bash 
   source <your env>/bin/activate
   ```
-.
  Установить зависимости
  ```bash 
  pip install -r requirements.txt
  ```
-.
  Запустить парсер
  ```bash 
  python parse_tululu_category.py
  ```
-.
 ## Аргументы
 ***
 ### --start_page
