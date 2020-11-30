@@ -97,7 +97,7 @@ def create_parser():
     parser.add_argument('-jp', '--json_path', type=str, default="books_info.json")
     return parser
 
-def get_book(url):
+def get_books_urls(url):
     response = response_check(url)
     soup = BeautifulSoup(response.text, 'lxml')
     selector = ".bookimage a"
@@ -131,8 +131,8 @@ def main():
     image_folder = os.path.join(dest_folder, "images")
     for page in range(start_page, end_page):
         url = url_base % page
-        book_urls = get_book(url)
-        for book_url in book_urls:
+        books_urls = get_books_urls(url)
+        for book_url in books_urls:
             try:
                 book_info = {}
                 url = book_url
