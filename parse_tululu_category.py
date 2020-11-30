@@ -129,8 +129,8 @@ def main():
     json_filename = os.path.join(dest_folder, json_path)
     books_folder = os.path.join(dest_folder, "books")
     image_folder = os.path.join(dest_folder, "images")
-    for i in range(start_page, end_page):
-        url = url_base % i
+    for page in range(start_page, end_page):
+        url = url_base % page
         book_urls = get_book(url)
         for book_url in book_urls:
             try:
