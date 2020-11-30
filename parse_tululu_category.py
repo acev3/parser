@@ -33,10 +33,10 @@ def title_parser(url):
         for genre in genres:
             genres_list.append(genre.text)
         title_name = title_name.split("/")[-1]
-        img_src_1 = urljoin(url, img_src)
+        img_src = urljoin(url, img_src)
     except Exception as e:
         return None, None, None, None, None, None
-    return title_name , img_src_1, comments, genres_list, author , id_book
+    return title_name , img_src, comments, genres_list, author, id_book
 
 
 def download_txt(filename, id_book, folder='books/'):
@@ -87,7 +87,7 @@ def save_comments(filename, text_list ,folder='comments/'):
     return comments_list
 
 
-def createParser():
+def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-sp', '--start_page', default=1, type=int)
     parser.add_argument('-ep', '--end_page', default=702, type=int)
@@ -117,9 +117,9 @@ def response_check(url):
 
 def main():
     url_base = 'https://tululu.org/l55/%s/'
-    book_massive = []
-    parser = createParser()
-    namespace = parser.parse_args(sys.argv[1:])
+    books = []
+    parser = create_parser()
+    namespace = parser.parse_args()
     start_page = namespace.start_page
     end_page = namespace.end_page
     dest_folder = namespace.dest_folder
@@ -158,11 +158,11 @@ def main():
                     book_info['comments'] = comments_list
                 if genres:
                     book_info['genres'] = genres
-                book_massive.append(book_info)
+                books.append(book_info)
             except Exception as e:
                 print(e)
     with open(json_filename, "a", encoding='utf-8') as my_file:
-        json.dump(book_massive, my_file, ensure_ascii=False)
+        json.dump(books, my_file, ensure_ascii=False)
 
 
 if __name__ == '__main__':
