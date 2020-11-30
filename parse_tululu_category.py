@@ -15,9 +15,8 @@ def title_parser(url):
     soup = BeautifulSoup(response.text, 'lxml')
     id_book = url.split("/")[-2].strip("b")
     try:
-        #title_tag = soup.find('div', id='content').find('h1')
         selector = "div#content h1"
-        title_tag= soup.select_one(selector)
+        title_tag = soup.select_one(selector)
         title = title_tag.text.split("::")
         title_name = title[0].strip("  ")
         title_name = title_name.replace(u'\xa0', u' ')
@@ -25,25 +24,17 @@ def title_parser(url):
         author = title[-1]
         author = author.replace(u'\xa0', u' ')
         author = author.strip(" ")
-        #img_src = soup.find('div', class_='bookimage').find('img')['src']
         selector = ".bookimage img"
         img_src = soup.select_one(selector)['src']
-        #comments = soup.find_all('div', class_="texts")
         selector = ".texts"
         comments = soup.select(selector)
-        #genres = soup.find('span', class_='d_book').find_all('a')
         selector = "span.d_book a"
         genres = soup.select(selector)
         genres_list = []
-        #print(title_name)
         for genre in genres:
             genres_list.append(genre.text)
-        #print(title_name)
         title_name = title_name.split("/")[-1]
-        #print(urljoin(url, img_src))
         img_src_1 = urljoin(url,img_src)
-        #print(comments)
-        #print(genres_list)
     except Exception as e:
         return None, None, None, None, None, None
     return title_name , img_src_1, comments, genres_list, author , id_book
