@@ -10,8 +10,7 @@ import os
 
 
 def title_parser(url):
-    response = requests.get(url, verify=False)
-    response.raise_for_status()
+    response = response_check(url)
     soup = BeautifulSoup(response.text, 'lxml')
     id_book = url.split("/")[-2].strip("b")
     try:
@@ -50,8 +49,7 @@ def download_txt(filename, id_book, folder='books/'):
         str: Путь до файла, куда сохранён текст.
     """
     url = "http://tululu.org/txt.php?id=%s" % id_book
-    response = requests.get(url, verify=False)
-    response.raise_for_status()
+    response = response_check(url)
     correct_filename = sanitize_filename(filename + '.txt')
     correct_folder = sanitize_filename(folder)
     filepath = os.path.join(correct_folder, correct_filename)
@@ -70,8 +68,7 @@ def download_image(url, folder='images/'):
     Returns:
         str: Путь до файла, куда сохранён текст.
     """
-    response = requests.get(url, verify=False)
-    response.raise_for_status()
+    response = response_check(url)
     image = response.content
     correct_filename = sanitize_filename(url.split("/")[-1])
     correct_folder = sanitize_filename(folder)
@@ -95,7 +92,7 @@ def save_comments(filename, text_list ,folder='comments/'):
 def createParser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-sp', '--start_page', default=1, type=int)
-    parser.add_argument('-ep', '--end_page', default=702 ,type=int)
+    parser.add_argument('-ep', '--end_page', default=702, type=int)
     parser.add_argument('-df', '--dest_folder', type=str, default="")
     parser.add_argument('-si', '--skip_imgs', action='store_const', const=True)
     parser.add_argument('-st', '--skip_txt', action='store_const', const=True)
@@ -103,19 +100,25 @@ def createParser():
     return parser
 
 def get_book(url):
-    response = requests.get(url, verify=False)
-    response.raise_for_status()
+    response = response_check(url)
     soup = BeautifulSoup(response.text, 'lxml')
     selector = ".bookimage a"
     book_urls = soup.select(selector)
     book_urls_list = []
     for book_url in book_urls:
         book_urls_list.append(urljoin(url, book_url['href']))
-    return  book_urls_list
+    return book_urls_list
 
+
+def response_check(url):
+    response = requests.get(url, verify=False, allow_redirects=False)
+    response.raise_for_status()
+    if response.status_code == 301:
+        raise requests.HTTPError('Redirect')
+    return response
 
 def main():
-    url_base = 'http://tululu.org/l55/%s/'
+    url_base = 'https://tululu.org/l55/%s/'
     book_massive = []
     parser = createParser()
     namespace = parser.parse_args(sys.argv[1:])
@@ -132,12 +135,10 @@ def main():
         url = url_base % i
         book_urls = get_book(url)
         for book_url in book_urls:
-            print(book_url)
             try:
                 book_info = {}
                 url = book_url
-                response = requests.get(url, verify=False)
-                response.raise_for_status()
+                response_check(url)
                 filename, img_src, comments, genres, author, id_book = title_parser(url)
                 if skip_txt:
                     book_info['book_path'] = None
