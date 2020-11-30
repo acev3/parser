@@ -48,7 +48,7 @@ def download_txt(filename, id_book, folder='books/'):
     Returns:
         str: Путь до файла, куда сохранён текст.
     """
-    url = "http://tululu.org/txt.php?id=%s" % id_book
+    url = "https://tululu.org/txt.php?id=%s" % id_book
     response = response_check(url)
     correct_filename = sanitize_filename(filename + '.txt')
     correct_folder = sanitize_filename(folder)
