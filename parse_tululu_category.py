@@ -131,34 +131,34 @@ def main():
     image_folder = os.path.join(dest_folder, "images")
     for page in range(start_page, end_page):
         url = url_base % page
-        books_urls = get_books_urls(url)
-        for book_url in books_urls:
+        book_urls = get_books_urls(url)
+        for book_url in book_urls:
             try:
-                book_info = {}
+                book = {}
                 url = book_url
                 response_check(url)
                 filename, img_src, comments, genres, author, id_book = title_parser(url)
                 if skip_txt:
-                    book_info['book_path'] = None
+                    book['book_path'] = None
                 else:
                     if filename:
-                        book_info['title'] = filename
+                        book['title'] = filename
                         book_path = download_txt(filename, id_book, books_folder)
-                        book_info['book_path'] = book_path
+                        book['book_path'] = book_path
                     if author:
-                        book_info['author'] = author
+                        book['author'] = author
                 if skip_imgs:
-                    book_info['image_src'] = None
+                    book['image_src'] = None
                 else:
                     if img_src:
                         image_src = download_image(img_src, image_folder)
-                        book_info['img_src'] = image_src
+                        book['img_src'] = image_src
                 if comments:
                     comments_list = save_comments(filename, comments)
-                    book_info['comments'] = comments_list
+                    book['comments'] = comments_list
                 if genres:
-                    book_info['genres'] = genres
-                books.append(book_info)
+                    book['genres'] = genres
+                books.append(book)
             except Exception as e:
                 print(e)
     with open(json_filename, "a", encoding='utf-8') as my_file:
