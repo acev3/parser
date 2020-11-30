@@ -33,7 +33,7 @@ def title_parser(url):
         for genre in genres:
             genres_list.append(genre.text)
         title_name = title_name.split("/")[-1]
-        img_src_1 = urljoin(url,img_src)
+        img_src_1 = urljoin(url, img_src)
     except Exception as e:
         return None, None, None, None, None, None
     return title_name , img_src_1, comments, genres_list, author , id_book
@@ -53,8 +53,7 @@ def download_txt(filename, id_book, folder='books/'):
     correct_filename = sanitize_filename(filename + '.txt')
     correct_folder = sanitize_filename(folder)
     filepath = os.path.join(correct_folder, correct_filename)
-    if not os.path.exists(correct_folder):
-        os.makedirs(correct_folder)
+    os.makedirs(correct_folder, exist_ok=True)
     with open(filepath, 'w') as file:
         file.write(response.text)
     return filepath
@@ -73,8 +72,7 @@ def download_image(url, folder='images/'):
     correct_filename = sanitize_filename(url.split("/")[-1])
     correct_folder = sanitize_filename(folder)
     filepath = os.path.join(correct_folder, correct_filename)
-    if not os.path.exists(correct_folder):
-        os.mkdir(correct_folder)
+    os.makedirs(correct_folder, exist_ok=True)
     with open(filepath, 'wb') as file:
         file.write(image)
     return filepath
