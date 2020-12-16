@@ -148,7 +148,11 @@ def main():
                 if genres:
                     book['genres'] = genres
                 books.append(book)
-            except Exception as e:
+            except TimeoutError as e:
+                print(e)
+            except TypeError as e:
+                print(e)
+            except ValueError as e:
                 print(e)
     with open(json_filename, "a", encoding='utf-8') as my_file:
         json.dump(books, my_file, ensure_ascii=False)
