@@ -82,8 +82,7 @@ def save_comments(filename, text_list ,folder='comments/'):
     for comment in text_list:
         selector = ".black"
         com = comment.select_one(selector)
-        text = com.text
-        comments_list.append(text)
+        comments_list.append(com.text)
     return comments_list
 
 
