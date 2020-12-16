@@ -29,9 +29,7 @@ def parse_title(url):
         comments = soup.select(selector)
         selector = "span.d_book a"
         genres = soup.select(selector)
-        genres_list = []
-        for genre in genres:
-            genres_list.append(genre.text)
+        genres_list = [genre.text for genre in genres]
         title_name = title_name.split("/")[-1]
         img_src = urljoin(url, img_src)
     except Exception as e:
