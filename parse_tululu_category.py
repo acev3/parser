@@ -13,28 +13,31 @@ def parse_title(url):
     response = check_response(url)
     soup = BeautifulSoup(response.text, 'lxml')
     id_book = url.split("/")[-2].strip("b")
-    try:
-        selector = "div#content h1"
-        title_tag = soup.select_one(selector)
-        title = title_tag.text.split("::")
-        title_name = title[0].strip()
-        title_name = title_name.replace(u'\xa0', u' ')
-        title_name = title_name.strip()
-        author = title[-1]
-        author = author.replace(u'\xa0', u' ')
-        author = author.strip()
-        selector = ".bookimage img"
-        img_src = soup.select_one(selector)['src']
-        selector = ".texts"
-        comments = soup.select(selector)
-        selector = "span.d_book a"
-        genres = soup.select(selector)
-        genres_list = [genre.text for genre in genres]
-        title_name = title_name.split("/")[-1]
-        img_src = urljoin(url, img_src)
-    except Exception as e:
-        return None, None, None, None, None, None
-    return title_name , img_src, comments, genres_list, author, id_book
+    title_name = None
+    img_src = None
+    comments = None
+    genres_list = None
+    author = None
+    id_book = None
+    selector = "div#content h1"
+    title_tag = soup.select_one(selector)
+    title = title_tag.text.split("::")
+    title_name = title[0].strip()
+    title_name = title_name.replace(u'\xa0', u' ')
+    title_name = title_name.strip()
+    author = title[-1]
+    author = author.replace(u'\xa0', u' ')
+    author = author.strip()
+    selector = ".bookimage img"
+    img_src = soup.select_one(selector)['src']
+    selector = ".texts"
+    comments = soup.select(selector)
+    selector = "span.d_book a"
+    genres = soup.select(selector)
+    genres_list = [genre.text for genre in genres]
+    title_name = title_name.split("/")[-1]
+    img_src = urljoin(url, img_src)
+    return title_name, img_src, comments, genres_list, author, id_book
 
 
 def download_txt(filename, id_book, folder='books/'):
