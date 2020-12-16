@@ -17,9 +17,9 @@ def parse_title(url):
         selector = "div#content h1"
         title_tag = soup.select_one(selector)
         title = title_tag.text.split("::")
-        title_name = title[0].strip("  ")
+        title_name = title[0].strip()
         title_name = title_name.replace(u'\xa0', u' ')
-        title_name = title_name.strip(" ")
+        title_name = title_name.strip()
         author = title[-1]
         author = author.replace(u'\xa0', u' ')
         author = author.strip(" ")
