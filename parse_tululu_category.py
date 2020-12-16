@@ -51,14 +51,14 @@ def download_txt(filename, id_book, folder='books/'):
     """
     url = "https://tululu.org/txt.php?id=%s" % id_book
     response = check_response(url)
-    correct_filename = sanitize_filename(filename + '.txt')
+    correct_filename = sanitize_filename(id_book + filename + '.txt')
     filepath = os.path.join(folder, correct_filename)
     os.makedirs(folder, exist_ok=True)
     with open(filepath, 'w') as file:
         file.write(response.text)
     return filepath
 
-def download_image(url, folder='images/'):
+def download_image(url, id_book, folder='images/'):
     """Функция для скачивания текстовых файлов.
     Args:
         url (str): Cсылка на текст, который хочется скачать.
@@ -69,7 +69,7 @@ def download_image(url, folder='images/'):
     """
     response = check_response(url)
     image = response.content
-    correct_filename = sanitize_filename(url.split("/")[-1])
+    correct_filename = sanitize_filename(id_book+ url.split("/")[-1])
     filepath = os.path.join(folder, correct_filename)
     os.makedirs(folder, exist_ok=True)
     with open(filepath, 'wb') as file:
@@ -138,7 +138,7 @@ def main():
                 book['image_src'] = None
                 if not skip_imgs:
                     if img_src:
-                        image_src = download_image(img_src, image_folder)
+                        image_src = download_image(img_src, id_book, image_folder)
                         book['img_src'] = image_src
                 if comments:
                     comments_list = [comment.select_one(".black") for comment in comments]
