@@ -9,8 +9,8 @@ from pathvalidate import sanitize_filename
 import os
 
 
-def title_parser(url):
-    response = response_check(url)
+def parse_title(url):
+    response = check_response(url)
     soup = BeautifulSoup(response.text, 'lxml')
     id_book = url.split("/")[-2].strip("b")
     try:
@@ -49,7 +49,7 @@ def download_txt(filename, id_book, folder='books/'):
         str: Путь до файла, куда сохранён текст.
     """
     url = "https://tululu.org/txt.php?id=%s" % id_book
-    response = response_check(url)
+    response = check_response(url)
     correct_filename = sanitize_filename(filename + '.txt')
     correct_folder = sanitize_filename(folder)
     filepath = os.path.join(correct_folder, correct_filename)
@@ -67,7 +67,7 @@ def download_image(url, folder='images/'):
     Returns:
         str: Путь до файла, куда сохранён текст.
     """
-    response = response_check(url)
+    response = check_response(url)
     image = response.content
     correct_filename = sanitize_filename(url.split("/")[-1])
     correct_folder = sanitize_filename(folder)
@@ -98,7 +98,7 @@ def create_parser():
     return parser
 
 def get_books_urls(url):
-    response = response_check(url)
+    response = check_response(url)
     soup = BeautifulSoup(response.text, 'lxml')
     selector = ".bookimage a"
     book_urls = soup.select(selector)
@@ -108,7 +108,7 @@ def get_books_urls(url):
     return book_urls_list
 
 
-def response_check(url):
+def check_response(url):
     response = requests.get(url, verify=False, allow_redirects=False)
     response.raise_for_status()
     if response.status_code == 301:
@@ -135,9 +135,8 @@ def main():
         for book_url in book_urls:
             try:
                 book = {}
-                url = book_url
-                response_check(url)
-                filename, img_src, comments, genres, author, id_book = title_parser(url)
+                check_response(book_url)
+                filename, img_src, comments, genres, author, id_book = parse_title(book_url)
                 if skip_txt:
                     book['book_path'] = None
                 else:
