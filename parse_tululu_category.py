@@ -52,9 +52,8 @@ def download_txt(filename, id_book, folder='books/'):
     url = "https://tululu.org/txt.php?id=%s" % id_book
     response = check_response(url)
     correct_filename = sanitize_filename(filename + '.txt')
-    correct_folder = sanitize_filename(folder)
-    filepath = os.path.join(correct_folder, correct_filename)
-    os.makedirs(correct_folder, exist_ok=True)
+    filepath = os.path.join(folder, correct_filename)
+    os.makedirs(folder, exist_ok=True)
     with open(filepath, 'w') as file:
         file.write(response.text)
     return filepath
@@ -71,9 +70,8 @@ def download_image(url, folder='images/'):
     response = check_response(url)
     image = response.content
     correct_filename = sanitize_filename(url.split("/")[-1])
-    correct_folder = sanitize_filename(folder)
-    filepath = os.path.join(correct_folder, correct_filename)
-    os.makedirs(correct_folder, exist_ok=True)
+    filepath = os.path.join(folder, correct_filename)
+    os.makedirs(folder, exist_ok=True)
     with open(filepath, 'wb') as file:
         file.write(image)
     return filepath
