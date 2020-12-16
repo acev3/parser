@@ -77,13 +77,10 @@ def download_image(url, folder='images/'):
         file.write(image)
     return filepath
 
-def save_comments(filename, text_list ,folder='comments/'):
-    comments_list = []
-    for comment in text_list:
-        selector = ".black"
-        com = comment.select_one(selector)
-        comments_list.append(com.text)
-    return comments_list
+def get_comments(filename, text_list, folder='comments/'):
+    selector = ".black"
+    comments = [comment.select_one(selector) for comment in text_list]
+    return comments
 
 
 def create_parser():
@@ -150,7 +147,7 @@ def main():
                         image_src = download_image(img_src, image_folder)
                         book['img_src'] = image_src
                 if comments:
-                    comments_list = save_comments(filename, comments)
+                    comments_list = get_comments(filename, comments)
                     book['comments'] = comments_list
                 if genres:
                     book['genres'] = genres
