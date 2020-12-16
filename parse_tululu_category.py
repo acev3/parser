@@ -22,7 +22,7 @@ def parse_title(url):
         title_name = title_name.strip()
         author = title[-1]
         author = author.replace(u'\xa0', u' ')
-        author = author.strip(" ")
+        author = author.strip()
         selector = ".bookimage img"
         img_src = soup.select_one(selector)['src']
         selector = ".texts"
