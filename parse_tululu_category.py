@@ -136,18 +136,16 @@ def main():
                 book = {}
                 check_response(book_url)
                 filename, img_src, comments, genres, author, id_book = parse_title(book_url)
-                if skip_txt:
-                    book['book_path'] = None
-                else:
+                book['book_path'] = None
+                if not skip_txt:
                     if filename:
                         book['title'] = filename
                         book_path = download_txt(filename, id_book, books_folder)
                         book['book_path'] = book_path
                     if author:
                         book['author'] = author
-                if skip_imgs:
-                    book['image_src'] = None
-                else:
+                book['image_src'] = None
+                if not skip_imgs:
                     if img_src:
                         image_src = download_image(img_src, image_folder)
                         book['img_src'] = image_src
