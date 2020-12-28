@@ -11,7 +11,7 @@ import os
 
 def parse_title(url, response):
     soup = BeautifulSoup(response.text, 'lxml')
-    id_book = url.split("/")[-2].strip("b")
+    book_id = url.split("/")[-2].strip("b")
     title_tag = soup.select_one("div#content h1")
     title = title_tag.text.split("::")
     title_name = title[0].strip()
@@ -23,10 +23,10 @@ def parse_title(url, response):
     genres = [genre.text for genre in genres]
     title_name = title_name.split("/")[-1]
     img_src = urljoin(url, img_src)
-    return title_name, img_src, comments, genres, author, id_book
+    return title_name, img_src, comments, genres, author, book_id
 
 
-def download_txt(filename, id_book, folder='books/'):
+def download_txt(filename, book_id, folder='books/'):
     """Функция для скачивания текстовых файлов.
     Args:
         url (str): Cсылка на текст, который хочется скачать.
@@ -35,16 +35,16 @@ def download_txt(filename, id_book, folder='books/'):
     Returns:
         str: Путь до файла, куда сохранён текст.
     """
-    url = "https://tululu.org/txt.php?id=%s" % id_book
+    url = "https://tululu.org/txt.php?id=%s" % book_id
     response = check_response(requests.get(url, verify=False, allow_redirects=False))
-    correct_filename = sanitize_filename(id_book + filename + '.txt')
+    correct_filename = sanitize_filename(book_id + filename + '.txt')
     filepath = os.path.join(folder, correct_filename)
     os.makedirs(folder, exist_ok=True)
     with open(filepath, 'w') as file:
         file.write(response.text)
     return filepath
 
-def download_image(url, id_book, folder='images/'):
+def download_image(url, book_id, folder='images/'):
     """Функция для скачивания текстовых файлов.
     Args:
         url (str): Cсылка на текст, который хочется скачать.
@@ -55,7 +55,7 @@ def download_image(url, id_book, folder='images/'):
     """
     response = check_response(requests.get(url, verify=False, allow_redirects=False))
     image = response.content
-    correct_filename = sanitize_filename(id_book+ url.split("/")[-1])
+    correct_filename = sanitize_filename(book_id + url.split("/")[-1])
     filepath = os.path.join(folder, correct_filename)
     os.makedirs(folder, exist_ok=True)
     with open(filepath, 'wb') as file:
@@ -102,19 +102,19 @@ def main():
             try:
                 book = {}
                 response = check_response(requests.get(book_url, verify=False, allow_redirects=False))
-                filename, img_src, comments, genres, author, id_book = parse_title(book_url, response)
+                filename, img_src, comments, genres, author, book_id = parse_title(book_url, response)
                 book['book_path'] = None
                 if not namespace.skip_txt:
                     if filename:
                         book['title'] = filename
-                        book_path = download_txt(filename, id_book, books_folder)
+                        book_path = download_txt(filename, book_id, books_folder)
                         book['book_path'] = book_path
                     if author:
                         book['author'] = author
                 book['image_src'] = None
                 if not namespace.skip_imgs:
                     if img_src:
-                        image_src = download_image(img_src, id_book, image_folder)
+                        image_src = download_image(img_src, book_id, image_folder)
                         book['img_src'] = image_src
                 if comments:
                     comments_list = [comment.select_one(".black") for comment in comments]
