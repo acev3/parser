@@ -8,7 +8,6 @@ import requests
 from pathvalidate import sanitize_filename
 import os
 
-
 def parse_title(url, response):
     soup = BeautifulSoup(response.text, 'lxml')
     book_id = url.split("/")[-2].strip("b")
@@ -24,7 +23,6 @@ def parse_title(url, response):
     title = title.split("/")[-1]
     img_src = urljoin(url, img_src)
     return title, img_src, comments, genres, author, book_id
-
 
 def download_txt(filename, book_id, folder='books/'):
     """Функция для скачивания текстовых файлов.
@@ -62,7 +60,6 @@ def download_image(url, book_id, folder='images/'):
         file.write(image)
     return filepath
 
-
 def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-sp', '--start_page', default=1, type=int)
@@ -79,7 +76,6 @@ def get_books_urls(url):
     selector = ".bookimage a"
     book_urls = soup.select(selector)
     return [urljoin(url, book_url['href']) for book_url in book_urls]
-
 
 def check_response(response):
     response.raise_for_status()
