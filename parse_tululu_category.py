@@ -78,10 +78,7 @@ def get_books_urls(url):
     soup = BeautifulSoup(response.text, 'lxml')
     selector = ".bookimage a"
     book_urls = soup.select(selector)
-    books_urls = []
-    for book_url in book_urls:
-        books_urls.append(urljoin(url, book_url['href']))
-    return books_urls
+    return [urljoin(url, book_url['href']) for book_url in book_urls]
 
 
 def check_response(response):
