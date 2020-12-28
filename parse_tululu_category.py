@@ -13,17 +13,17 @@ def parse_title(url, response):
     soup = BeautifulSoup(response.text, 'lxml')
     book_id = url.split("/")[-2].strip("b")
     title_tag = soup.select_one("div#content h1")
-    title = title_tag.text.split("::")
-    title_name = title[0].strip()
-    title_name = title_name.replace(u'\xa0', u' ').strip()
-    author = title[-1].replace(u'\xa0', u' ').strip()
+    title_tag = title_tag.text.split("::")
+    title = title_tag[0].strip()
+    title = title.replace(u'\xa0', u' ').strip()
+    author = title_tag[-1].replace(u'\xa0', u' ').strip()
     img_src = soup.select_one(".bookimage img")['src']
     comments = soup.select(".texts")
     genres = soup.select("span.d_book a")
     genres = [genre.text for genre in genres]
-    title_name = title_name.split("/")[-1]
+    title = title.split("/")[-1]
     img_src = urljoin(url, img_src)
-    return title_name, img_src, comments, genres, author, book_id
+    return title, img_src, comments, genres, author, book_id
 
 
 def download_txt(filename, book_id, folder='books/'):
