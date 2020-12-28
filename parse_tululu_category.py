@@ -20,10 +20,10 @@ def parse_title(url, response):
     img_src = soup.select_one(".bookimage img")['src']
     comments = soup.select(".texts")
     genres = soup.select("span.d_book a")
-    genres_list = [genre.text for genre in genres]
+    genres = [genre.text for genre in genres]
     title_name = title_name.split("/")[-1]
     img_src = urljoin(url, img_src)
-    return title_name, img_src, comments, genres_list, author, id_book
+    return title_name, img_src, comments, genres, author, id_book
 
 
 def download_txt(filename, id_book, folder='books/'):
@@ -78,10 +78,10 @@ def get_books_urls(url):
     soup = BeautifulSoup(response.text, 'lxml')
     selector = ".bookimage a"
     book_urls = soup.select(selector)
-    book_urls_list = []
+    books_urls = []
     for book_url in book_urls:
-        book_urls_list.append(urljoin(url, book_url['href']))
-    return book_urls_list
+        books_urls.append(urljoin(url, book_url['href']))
+    return books_urls
 
 
 def check_response(response):
