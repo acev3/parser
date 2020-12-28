@@ -33,7 +33,7 @@ def download_txt(filename, book_id, folder='books/'):
     """
     url = "https://tululu.org/txt.php?id=%s" % book_id
     response = check_response(requests.get(url, verify=False, allow_redirects=False))
-    correct_filename = sanitize_filename(book_id + filename + '.txt')
+    correct_filename = sanitize_filename("{}{}.txt".fromat(book_id, filename))
     filepath = os.path.join(folder, correct_filename)
     os.makedirs(folder, exist_ok=True)
     with open(filepath, 'w') as file:
