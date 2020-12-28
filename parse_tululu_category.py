@@ -88,7 +88,7 @@ def get_books_urls(url):
 def check_response(url):
     response = requests.get(url, verify=False, allow_redirects=False)
     response.raise_for_status()
-    if response.status_code == 301:
+    if response.history:
         raise requests.HTTPError('Redirect')
     return response
 
