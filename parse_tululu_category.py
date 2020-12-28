@@ -13,21 +13,12 @@ def parse_title(url):
     response = check_response(url)
     soup = BeautifulSoup(response.text, 'lxml')
     id_book = url.split("/")[-2].strip("b")
-    title_name = None
-    img_src = None
-    comments = None
-    genres_list = None
-    author = None
-    id_book = None
     selector = "div#content h1"
     title_tag = soup.select_one(selector)
     title = title_tag.text.split("::")
     title_name = title[0].strip()
-    title_name = title_name.replace(u'\xa0', u' ')
-    title_name = title_name.strip()
-    author = title[-1]
-    author = author.replace(u'\xa0', u' ')
-    author = author.strip()
+    title_name = title_name.replace(u'\xa0', u' ').strip()
+    author = title[-1].replace(u'\xa0', u' ').strip()
     selector = ".bookimage img"
     img_src = soup.select_one(selector)['src']
     selector = ".texts"
@@ -110,16 +101,10 @@ def main():
     books = []
     parser = create_parser()
     namespace = parser.parse_args()
-    start_page = namespace.start_page
-    end_page = namespace.end_page
-    dest_folder = namespace.dest_folder
-    skip_imgs = namespace.skip_imgs
-    skip_txt = namespace.skip_txt
-    json_path = namespace.json_path
-    json_filename = os.path.join(dest_folder, json_path)
-    books_folder = os.path.join(dest_folder, "books")
-    image_folder = os.path.join(dest_folder, "images")
-    for page in range(start_page, end_page):
+    json_filename = os.path.join(namespace.dest_folder, namespace.json_path)
+    books_folder = os.path.join(namespace.dest_folder, "books")
+    image_folder = os.path.join(namespace.dest_folder, "images")
+    for page in range(namespace.start_page, namespace.end_page):
         url = url_base % page
         book_urls = get_books_urls(url)
         for book_url in book_urls:
@@ -128,7 +113,7 @@ def main():
                 check_response(book_url)
                 filename, img_src, comments, genres, author, id_book = parse_title(book_url)
                 book['book_path'] = None
-                if not skip_txt:
+                if not namespace.skip_txt:
                     if filename:
                         book['title'] = filename
                         book_path = download_txt(filename, id_book, books_folder)
@@ -136,7 +121,7 @@ def main():
                     if author:
                         book['author'] = author
                 book['image_src'] = None
-                if not skip_imgs:
+                if not namespace.skip_imgs:
                     if img_src:
                         image_src = download_image(img_src, id_book, image_folder)
                         book['img_src'] = image_src
