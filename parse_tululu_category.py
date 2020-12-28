@@ -10,7 +10,7 @@ import os
 
 
 def parse_title(url):
-    response = check_response(url)
+    response = check_response(requests.get(url, verify=False, allow_redirects=False))
     soup = BeautifulSoup(response.text, 'lxml')
     id_book = url.split("/")[-2].strip("b")
     title_tag = soup.select_one("div#content h1")
@@ -37,7 +37,7 @@ def download_txt(filename, id_book, folder='books/'):
         str: Путь до файла, куда сохранён текст.
     """
     url = "https://tululu.org/txt.php?id=%s" % id_book
-    response = check_response(url)
+    response = check_response(requests.get(url, verify=False, allow_redirects=False))
     correct_filename = sanitize_filename(id_book + filename + '.txt')
     filepath = os.path.join(folder, correct_filename)
     os.makedirs(folder, exist_ok=True)
@@ -54,7 +54,7 @@ def download_image(url, id_book, folder='images/'):
     Returns:
         str: Путь до файла, куда сохранён текст.
     """
-    response = check_response(url)
+    response = check_response(requests.get(url, verify=False, allow_redirects=False))
     image = response.content
     correct_filename = sanitize_filename(id_book+ url.split("/")[-1])
     filepath = os.path.join(folder, correct_filename)
@@ -75,7 +75,7 @@ def create_parser():
     return parser
 
 def get_books_urls(url):
-    response = check_response(url)
+    response = check_response(requests.get(url, verify=False, allow_redirects=False))
     soup = BeautifulSoup(response.text, 'lxml')
     selector = ".bookimage a"
     book_urls = soup.select(selector)
@@ -85,8 +85,7 @@ def get_books_urls(url):
     return book_urls_list
 
 
-def check_response(url):
-    response = requests.get(url, verify=False, allow_redirects=False)
+def check_response(response):
     response.raise_for_status()
     if response.history:
         raise requests.HTTPError('Redirect')
@@ -106,7 +105,7 @@ def main():
         for book_url in book_urls:
             try:
                 book = {}
-                check_response(book_url)
+                check_response(requests.get(book_url, verify=False, allow_redirects=False))
                 filename, img_src, comments, genres, author, id_book = parse_title(book_url)
                 book['book_path'] = None
                 if not namespace.skip_txt:
