@@ -10,7 +10,7 @@ import os
 
 def parse_title(url, text):
     soup = BeautifulSoup(text, 'lxml')
-    book_id = url.split("/")[-2].strip("b")
+    book_id = [idx for idx in url.split("/") if idx][-1].strip("b")
     title_tag = soup.select_one("div#content h1")
     title, author = title_tag.text.strip().replace(u'\xa0', u' ').split("::")
     title = title.strip().split("/")[-1]
