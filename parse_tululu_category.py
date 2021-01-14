@@ -106,10 +106,9 @@ def main():
                     if author:
                         book['author'] = author
                 book['image_src'] = None
-                if not namespace.skip_imgs:
-                    if img_src:
-                        image_src = download_image(img_src, book_id, image_folder)
-                        book['img_src'] = image_src
+                if img_src and not namespace.skip_imgs:
+                    image_src = download_image(img_src, book_id, image_folder)
+                    book['img_src'] = image_src
                 if comments:
                     comments_list = [comment.select_one(".black") for comment in comments]
                     book['comments'] = comments_list
