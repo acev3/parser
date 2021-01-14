@@ -12,9 +12,8 @@ def parse_title(url, text):
     soup = BeautifulSoup(text, 'lxml')
     book_id = url.split("/")[-2].strip("b")
     title_tag = soup.select_one("div#content h1")
-    title, author = title_tag.text.split("::")
-    title = title.strip().replace(u'\xa0', u' ').strip().split("/")[-1]
-    author = author.replace(u'\xa0', u' ').strip()
+    title, author = title_tag.text.strip().replace(u'\xa0', u' ').split("::")
+    title = title.strip().split("/")[-1]
     img_src = soup.select_one(".bookimage img")['src']
     comments = soup.select(".texts")
     genres = soup.select("span.d_book a")
