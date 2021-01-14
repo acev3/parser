@@ -18,8 +18,8 @@ def parse_title(url, text):
     comments = soup.select(".texts")
     genres = soup.select("span.d_book a")
     genres = [genre.text for genre in genres]
-    img_src = urljoin(url, img_src)
-    return title, img_src, comments, genres, author, book_id
+    img_url = urljoin(url, img_src)
+    return title, img_url, comments, genres, author, book_id
 
 def download_txt(filename, book_id, folder='books/'):
     """Функция для скачивания текстовых файлов.
