@@ -34,7 +34,6 @@ def download_txt(filename, book_id, folder='books/'):
     response = check_response(requests.get(url, verify=False, allow_redirects=False))
     correct_filename = sanitize_filename("{}{}.txt".format(book_id, filename))
     filepath = os.path.join(folder, correct_filename)
-    os.makedirs(folder, exist_ok=True)
     with open(filepath, 'w') as file:
         file.write(response.text)
     return filepath
@@ -52,7 +51,6 @@ def download_image(url, book_id, folder='images/'):
     image = response.content
     correct_filename = sanitize_filename(book_id + url.split("/")[-1])
     filepath = os.path.join(folder, correct_filename)
-    os.makedirs(folder, exist_ok=True)
     with open(filepath, 'wb') as file:
         file.write(image)
     return filepath
@@ -88,6 +86,8 @@ def main():
     json_filename = os.path.join(namespace.dest_folder, namespace.json_path)
     books_folder = os.path.join(namespace.dest_folder, "books")
     image_folder = os.path.join(namespace.dest_folder, "images")
+    os.makedirs('books/', exist_ok=True)
+    os.makedirs('images/', exist_ok=True)
     for page in range(namespace.start_page, namespace.end_page):
         url = url_base % page
         book_urls = get_books_urls(url)
