@@ -8,8 +8,8 @@ import requests
 from pathvalidate import sanitize_filename
 import os
 
-def parse_title(url, response):
-    soup = BeautifulSoup(response.text, 'lxml')
+def parse_title(url, text):
+    soup = BeautifulSoup(text, 'lxml')
     book_id = url.split("/")[-2].strip("b")
     title_tag = soup.select_one("div#content h1")
     title, author = title_tag.text.split("::")
@@ -96,7 +96,7 @@ def main():
             try:
                 book = {}
                 response = check_response(requests.get(book_url, verify=False, allow_redirects=False))
-                filename, img_src, comments, genres, author, book_id = parse_title(book_url, response)
+                filename, img_src, comments, genres, author, book_id = parse_title(book_url, response.text)
                 book['book_path'] = None
                 if not namespace.skip_txt:
                     if filename:
