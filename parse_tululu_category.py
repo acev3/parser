@@ -109,8 +109,7 @@ def main():
                     image_src = download_image(img_src, book_id, image_folder)
                     book['img_src'] = image_src
                 if comments:
-                    comments_list = [comment.select_one(".black") for comment in comments]
-                    book['comments'] = comments_list
+                    book['comments'] = [comment.select_one(".black").text for comment in comments]
                 if genres:
                     book['genres'] = genres
                 books.append(book)
