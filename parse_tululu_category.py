@@ -71,8 +71,8 @@ def get_books_urls(url):
     response = check_response(requests.get(url, verify=False, allow_redirects=False))
     soup = BeautifulSoup(response.text, 'lxml')
     selector = ".bookimage a"
-    book_urls = soup.select(selector)
-    return [urljoin(url, book_url['href']) for book_url in book_urls]
+    book_a_tags = soup.select(selector)
+    return [urljoin(url, book_url['href']) for book_url in  book_a_tags]
 
 def check_response(response):
     response.raise_for_status()
