@@ -34,6 +34,8 @@ def download_txt(filename, book_id, folder='books/'):
     response = check_response(requests.get(url, verify=False, allow_redirects=False))
     correct_filename = sanitize_filename("{}{}.txt".format(book_id, filename))
     filepath = os.path.join(folder, correct_filename)
+    if not response.text:
+        return None
     with open(filepath, 'w') as file:
         file.write(response.text)
     return filepath
@@ -99,20 +101,22 @@ def main():
                 book['book_path'] = None
                 if not namespace.skip_txt:
                     if filename:
-                        book['title'] = filename
                         book_path = download_txt(filename, book_id, books_folder)
                         book['book_path'] = book_path
+                        book['title'] = filename
                     if author:
                         book['author'] = author
                 book['image_src'] = None
                 if img_src and not namespace.skip_imgs:
-                    image_src = download_image(img_src, book_id, image_folder)
-                    book['img_src'] = image_src
+                    if book_path:
+                        image_src = download_image(img_src, book_id, image_folder)
+                        book['img_src'] = image_src
                 if comments:
                     book['comments'] = [comment.select_one(".black").text for comment in comments]
                 if genres:
                     book['genres'] = genres
-                books.append(book)
+                if book_path:
+                    books.append(book)
             except (TimeoutError, TypeError, ValueError, requests.HTTPError, ConnectionError) as e:
                 print(e)
     with open(json_filename, "a", encoding='utf-8') as my_file:
